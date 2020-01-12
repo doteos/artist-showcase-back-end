@@ -22,7 +22,7 @@
     "url": "git+https://github.com/adindotdev/doteos-artist-showcase-back-end.git"
   },
   "author": "Adin Kwok and Calvin Hong",
-  "license": "N/A",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/adindotdev/doteos-artist-showcase-back-end/issues"
   },
