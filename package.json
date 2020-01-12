@@ -1,19 +1,9 @@
 {
-  "name": "doteos-back",
+  "name": "doteosBE",
   "version": "0.0.1",
-  "description": "A back-end project that manages the Doteos Artist Showcase.",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Hi, welcome!\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/adindotdev/doteos-artist-showcase-back-end.git"
-  },
-  "author": "Adin Kwok and Calvin Hong",
-  "license": "N/A",
-  "bugs": {
-    "url": "https://github.com/adindotdev/doteos-artist-showcase-back-end/issues"
-  },
-  "homepage": "https://adin.dev"
+  "description": "init yarn",
+  "main": "index.js",
+  "repository": "github.com/adindotdev/doteos-artist-showcase-back-end",
+  "author": "Adin Kwok, Calvin Hong",
+  "license": "GPL"
 }
