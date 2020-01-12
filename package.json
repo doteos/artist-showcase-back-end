@@ -2,11 +2,10 @@
   "name": "doteos-back",
   "version": "0.0.1",
   "description": "A back-end project that manages the Doteos Artist Showcase.",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Hi, welcome!\" && exit 1",
-    "start": "nodemon server.js",
-    "dev": "nodemon index.js"
+    "test": "echo \"Hi, welcome!\" && exit 0",
+    "start": "nodemon src/server.js"
   },
   "dependencies": {
     "babel-eslint": "^10.0.3",
