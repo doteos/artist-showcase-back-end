@@ -1,8 +1,8 @@
 const express = require('express');
 
-const app = express();
+const server = express();
 const port = process.env.PORT || 3000;
 
-app.listen(port);
+require('./router/index')(server);
 
-// console.log(`todo list RESTful API server started on: ${port}`);
+server.listen(port);
