@@ -9,8 +9,14 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "babel-eslint": "^10.0.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
     "express": "^4.16.3",
     "helmet": "^3.12.1",
     "mongoose": "^5.2.3",
