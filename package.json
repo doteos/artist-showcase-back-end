@@ -16,11 +16,13 @@
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "express": "^4.16.3",
     "helmet": "^3.12.1",
     "mongoose": "^5.2.3",
     "mongoose-paginate": "^5.0.3",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "multer": "^1.4.2"
   },
   "repository": {
     "type": "git",
