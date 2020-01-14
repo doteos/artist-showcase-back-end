@@ -1,26 +1,23 @@
-// image.js
+// image_receive.js
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
 const { Schema } = mongoose;
 
-const imageSchema = new Schema({
+const imageReceiveSchema = new Schema({
   artistName: {
     type: String,
   },
-  artistUrl: {
+  clickUrl: {
     type: String,
   },
   imageName: {
     type: String,
   },
-  imageUrl: {
-    type: String,
-  },
 });
 
-imageSchema.plugin(mongoosePaginate);
+imageReceiveSchema.plugin(mongoosePaginate);
 
-const image = mongoose.model('image', imageSchema);
+const imageReturn = mongoose.model('image', imageReceiveSchema);
 
-module.exports = image;
+module.exports = imageReturn;

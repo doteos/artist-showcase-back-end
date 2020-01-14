@@ -1,5 +1,5 @@
-const Post = require('./image');
+const imageReturn = require('./image_return');
 
 module.exports = {
-  Post,
+  imageReturn,
 };
