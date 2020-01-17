@@ -2,6 +2,11 @@ const validUrl = require('valid-url');
 const fs = require('fs');
 
 module.exports = {
+  /**
+   * Validates the req body params and returns them from as a file.
+   * @param req
+   * @returns {string|{clickUrl: *, imageName: *, imageFile: Stats, artistName: *}}
+   */
   getBodyParams: (req) => {
     try {
       const { artistName, imageName, clickUrl } = req.body;
