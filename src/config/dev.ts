@@ -1,5 +1,5 @@
 // dev.js
-module.exports = {
+export default {
   PORT: 8001,
   MONGO_URI: 'mongodb://localhost:27017/simple-api-dev',
   MONGO_USER: 'admin',

@@ -1,6 +1,7 @@
 // image_return.js
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate');
+import mongoose from "mongoose";
+
+import mongoosePaginate from "mongoose-paginate";
 
 const { Schema } = mongoose;
 
@@ -23,4 +24,4 @@ imageReturnSchema.plugin(mongoosePaginate);
 
 const imageReturn = mongoose.model('image', imageReturnSchema);
 
-module.exports = imageReturn;
+export default imageReturn;
