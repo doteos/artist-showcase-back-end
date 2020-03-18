@@ -7,17 +7,17 @@ module.exports = {
    */
   addArtistImage: async (req, res, next) => {
     // TODO: Each artist gets a UID, each image also gets UID
-    // TODO: Rename file to uidArtist-uidImage-imageName-artistName.xxx
     // TODO: Make a PR to add image file to git repo
     // TODO: If PR merged, make db entry
     const params = addHelper.getBodyParams(req);
     if (typeof params !== 'string') {
-      res.status(200);
+      await res.status(200);
       res.send(params);
     } else {
-      res.status(400);
+      await res.status(400);
       res.send(params);
     }
+    addHelper.removeImageUpload(req.file.filename);
     next();
   },
 
