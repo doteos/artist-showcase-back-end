@@ -1,9 +1,16 @@
-import * as exp from 'express'
-import router from './router';
+import {App} from "./app";
+import {ArtistImageController} from "./controller/ArtistImageController";
+import {ShowcaseController} from "./controller/ShowcaseController";
+import {SpecificImageController} from "./controller/SpecificImageController";
 
-const server: exp.Express = exp();
-const port = process.env.PORT || 3000;
-server.use(exp.json());
-router(server);
+const showcaseController = new ShowcaseController();
+const app = new App({
+    port: 3000,
+    controllers: [
+        new ArtistImageController(showcaseController),
+        new SpecificImageController(showcaseController)
+    ],
+    middleWares: []
+});
 
-server.listen(port);
+app.listen();

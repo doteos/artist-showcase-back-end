@@ -8,7 +8,7 @@ class GitHub {
 }
 
 export default {
-    pushToGitHub: async function (model: AddArtistImageModel) {
+    addArtistImageBranch: async function (model: AddArtistImageModel) {
         const sGit: SimpleGit.SimpleGit = SimpleGit("repo");
         const isRepo: Boolean = await sGit.checkIsRepo();
         if (!isRepo) {
@@ -26,7 +26,12 @@ export default {
             await sGit.add(model.fileName);
             await sGit.commit(`Add ${model.imageName} by ${model.artistName}`);
             await sGit.push(GitHub.ORIGIN, model.fileName);
+            await sGit.checkoutLocalBranch(GitHub.MASTER);
+            await sGit.pull(GitHub.ORIGIN, GitHub.MASTER);
         } catch (e) {
+            await sGit.reset("hard");
+            await sGit.clean("f");
+            await sGit.checkoutLocalBranch(GitHub.MASTER);
             throw new PushToGitHubError(`${e.message}`);
         }
     }
