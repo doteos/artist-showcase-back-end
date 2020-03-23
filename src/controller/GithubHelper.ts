@@ -1,37 +1,47 @@
-import {AddArtistImageModel, PushToGitHubError} from "../model/CustomTypes";
+import {AddArtistImageModel} from "../model/CustomInterfaces";
 import * as SimpleGit from "simple-git/promise";
 import * as fs from "fs";
+import {PushToGitHubError} from "../model/CustomTypes";
 
 class GitHub {
-    static ORIGIN: string = 'git@github.com:doteos/artist-showcase-back-end.git';
-    static MASTER: string = 'master';
+    static ORIGIN: string = 'git@github.com:doteos/artist-showcase-images.git';
+    static BRANCH: string = 'test-master';
+    static PATH: string = 'src/repo';
 }
 
 export default {
     addArtistImageBranch: async function (model: AddArtistImageModel) {
-        const sGit: SimpleGit.SimpleGit = SimpleGit("repo");
+        const sGit: SimpleGit.SimpleGit = SimpleGit(GitHub.PATH);
         const isRepo: Boolean = await sGit.checkIsRepo();
         if (!isRepo) {
             throw new PushToGitHubError(`'repo/' is not a repo`);
         }
         try {
-            await sGit.checkoutLocalBranch(GitHub.MASTER);
-            await sGit.pull(GitHub.ORIGIN, GitHub.MASTER);
-            await sGit.checkoutBranch(model.fileName, GitHub.MASTER);
-            const artistPath = `repo/${model.artistName.toLowerCase().replace(/ /g, '_')}`;
-            if (!fs.existsSync(artistPath)) {
-                fs.mkdirSync(artistPath);
+            await sGit.checkout(GitHub.BRANCH);
+            await sGit.pull(GitHub.ORIGIN, GitHub.BRANCH);
+            const branch = await sGit.branchLocal().then((res) => res.all);
+            if (branch.includes(model.image.filename)) {
+                await sGit.checkout(model.image.filename);
+                await sGit.reset(['--hard', GitHub.BRANCH]);
+            } else {
+                await sGit.checkoutBranch(model.image.filename, GitHub.BRANCH);
             }
-            fs.renameSync(`uploads/${model.fileName}`, `${artistPath}/${model.fileName}`);
-            await sGit.add(model.fileName);
+            const artistPath = model.artistName.toLowerCase().replace(/ /g, '_');
+            if (!fs.existsSync(`${GitHub.PATH}/${artistPath}`)) {
+                fs.mkdirSync(`${GitHub.PATH}/${artistPath}`);
+            }
+            fs.renameSync(`uploads/${model.image.filename}`, `${GitHub.PATH}/${artistPath}/${model.image.filename}`);
+            await sGit.add(`${artistPath}/${model.image.filename}`);
             await sGit.commit(`Add ${model.imageName} by ${model.artistName}`);
-            await sGit.push(GitHub.ORIGIN, model.fileName);
-            await sGit.checkoutLocalBranch(GitHub.MASTER);
-            await sGit.pull(GitHub.ORIGIN, GitHub.MASTER);
+            await sGit.raw(['push', GitHub.ORIGIN, model.image.filename, '-f']);
+            await sGit.checkout(GitHub.BRANCH);
+            await sGit.pull(GitHub.ORIGIN, GitHub.BRANCH);
+            await sGit.reset("hard");
+            await sGit.clean("f");
         } catch (e) {
             await sGit.reset("hard");
             await sGit.clean("f");
-            await sGit.checkoutLocalBranch(GitHub.MASTER);
+            await sGit.checkout(GitHub.BRANCH);
             throw new PushToGitHubError(`${e.message}`);
         }
     }

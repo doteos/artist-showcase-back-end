@@ -1,27 +1,30 @@
-import addHelper from "./AddImageHelper";
-import * as exp from "express";
-import {AddArtistImageModel} from "../model/CustomTypes";
+import AddHelper from "./AddImageHelper";
+import * as Express from "express";
 import GitHubHelper from "./GithubHelper";
+import {AddArtistImageModel} from "../model/CustomInterfaces";
 
 export class ShowcaseController {
     /**
      * Adds a valid artist image.
      * @returns {Promise<void>}
      */
-    public async addArtistImage(req: exp.Request, res: exp.Response, next: Function) {
+    public async addArtistImage(req: Express.Request, res: Express.Response, next: Function) {
         // TODO: Each artist gets a UID, each image also gets UID
         // TODO: Make a PR to add image file to git repo
         // TODO: If PR merged, make db entry
+        let fileName = req.file.filename;
         try {
-            const model: AddArtistImageModel = new AddArtistImageModel(req);
+            const model: AddArtistImageModel = req.body;
+            model.image = req.file;
+            fileName = AddHelper.renameFile(model);
             await GitHubHelper.addArtistImageBranch(model);
             res.status(200);
             res.send(model);
         } catch (e) {
             res.status(400);
-            res.send(e);
+            res.send(e.message);
         }
-        addHelper.removeImageUpload(req.file.filename);
+        AddHelper.removeImageUpload(fileName);
         next();
     }
 
@@ -29,7 +32,7 @@ export class ShowcaseController {
      * Returns a random image;
      * @returns {Promise<void>}
      */
-    public async getArtistImage(req: exp.Request, res: exp.Response, next: Function) {
+    public async getArtistImage(req: Express.Request, res: Express.Response, next: Function) {
         // TODO: Returns a random entry from database
         // TODO: Return format is JSONObject with imageUrl, imageName, clickUrl, artistName
         res.send('Received a GET HTTP method for getImage');
@@ -40,7 +43,7 @@ export class ShowcaseController {
      * Deletes an image;
      * @returns {Promise<void>}
      */
-    public async deleteImage(req: exp.Request, res: exp.Response, next: Function) {
+    public async deleteImage(req: Express.Request, res: Express.Response, next: Function) {
         // TODO: deletes a database entry based on uidArtist and uidImage
         res.send('Received a DELETE HTTP method for deleteImage');
         next();
