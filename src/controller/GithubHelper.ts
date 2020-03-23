@@ -30,8 +30,9 @@ export default {
             if (!fs.existsSync(`${GitHub.PATH}/${artistPath}`)) {
                 fs.mkdirSync(`${GitHub.PATH}/${artistPath}`);
             }
-            fs.renameSync(`uploads/${model.image.filename}`, `${GitHub.PATH}/${artistPath}/${model.image.filename}`);
-            await sGit.add(`${artistPath}/${model.image.filename}`);
+            const imageType = model.image.mimetype.replace('image/', '');
+            fs.renameSync(`uploads/${model.image.filename}`, `${GitHub.PATH}/${artistPath}/${model.image.filename}.${imageType}`);
+            await sGit.add(`${artistPath}/${model.image.filename}.${imageType}`);
             await sGit.commit(`Add ${model.imageName} by ${model.artistName}`);
             await sGit.raw(['push', GitHub.ORIGIN, model.image.filename, '-f']);
             await sGit.checkout(GitHub.BRANCH);
