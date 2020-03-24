@@ -1,14 +1,14 @@
 import {App} from "./app";
 import {ArtistImageController} from "./controller/ArtistImageController";
-import {ShowcaseController} from "./controller/ShowcaseController";
+import {ShowcaseFacade} from "./main/ShowcaseFacade";
 import {SpecificImageController} from "./controller/SpecificImageController";
 
-const showcaseController = new ShowcaseController();
+const facade = new ShowcaseFacade();
 const app = new App({
     port: 3000,
     controllers: [
-        new ArtistImageController(showcaseController),
-        new SpecificImageController(showcaseController)
+        new ArtistImageController(facade),
+        new SpecificImageController(facade)
     ],
     middleWares: []
 });

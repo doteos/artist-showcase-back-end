@@ -1,12 +1,12 @@
 import {AddArtistImageModel} from "../model/CustomInterfaces";
 import * as SimpleGit from "simple-git/promise";
 import * as fs from "fs";
-import {PushToGitHubError} from "../model/CustomTypes";
+import {PushToGitHubError} from "../model/CustomErrors";
 
 class GitHub {
     static ORIGIN: string = 'git@github.com:doteos/artist-showcase-images.git';
     static BRANCH: string = 'test-master';
-    static PATH: string = 'src/repo';
+    static PATH: string = 'repo';
 }
 
 export default {

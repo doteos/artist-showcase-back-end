@@ -1,5 +1,5 @@
 import * as express from 'express'
-import {ShowcaseController} from "./ShowcaseController";
+import {ShowcaseFacade} from "../main/ShowcaseFacade";
 import * as multer from "multer";
 import {IControllerBase} from "../model/CustomInterfaces";
 import * as Joi from "joi";
@@ -15,14 +15,14 @@ export class ArtistImageController implements IControllerBase {
         image: Joi.required()
     });
 
-    constructor(showcaseController: ShowcaseController) {
-        this.initRoutes(showcaseController);
+    constructor(facade: ShowcaseFacade) {
+        this.initRoutes(facade);
     }
 
-    public initRoutes(showcaseController: ShowcaseController) {
+    public initRoutes(facade: ShowcaseFacade) {
         const upload = multer({dest: 'uploads/'});
-        this.router.get(this.path, showcaseController.getArtistImage);
+        this.router.get(this.path, facade.getArtistImage);
         this.router.post(this.path, [Validator.validateJoi(this.schemaQuery, 'body'),
-            upload.single('image'), Validator.validateImageFile()], showcaseController.addArtistImage);
+            upload.single('image'), Validator.validateImageFile()], facade.addArtistImage);
     }
 }

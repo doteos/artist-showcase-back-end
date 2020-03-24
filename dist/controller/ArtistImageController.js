@@ -5,7 +5,7 @@ const multer = require("multer");
 const Joi = require("joi");
 const Validator_1 = require("../middleware/Validator");
 class ArtistImageController {
-    constructor(showcaseController) {
+    constructor(showcaseFacade) {
         this.path = '/showcase/artist/image';
         this.router = express.Router();
         this.schemaQuery = Joi.object().keys({
@@ -14,13 +14,13 @@ class ArtistImageController {
             clickUrl: Joi.string().uri().required(),
             image: Joi.required()
         });
-        this.initRoutes(showcaseController);
+        this.initRoutes(showcaseFacade);
     }
-    initRoutes(showcaseController) {
+    initRoutes(showcaseFacade) {
         const upload = multer({ dest: 'uploads/' });
-        this.router.get(this.path, showcaseController.getArtistImage);
+        this.router.get(this.path, showcaseFacade.getArtistImage);
         this.router.post(this.path, [Validator_1.default.validateJoi(this.schemaQuery, 'body'),
-            upload.single('image'), Validator_1.default.validateImageFile], showcaseController.addArtistImage);
+            upload.single('image'), Validator_1.default.validateImageFile], showcaseFacade.addArtistImage);
     }
 }
 exports.ArtistImageController = ArtistImageController;

@@ -1,7 +1,7 @@
-import {ShowcaseController} from "../controller/ShowcaseController";
+import {ShowcaseFacade} from "../main/ShowcaseFacade";
 
 export interface IControllerBase {
-    initRoutes(showcaseController: ShowcaseController): any
+    initRoutes(facade: ShowcaseFacade): any
 }
 
 export interface AddArtistImageModel {

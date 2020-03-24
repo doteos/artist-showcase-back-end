@@ -1,4 +1,4 @@
-import AddImageHelper from "../controller/AddImageHelper";
+import AddImageHelper from "../helper/AddImageHelper";
 import * as Express from "express";
 import * as Joi from "joi";
 import {ObjectSchema} from "joi";

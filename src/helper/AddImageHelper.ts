@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import {AddArtistImageModel} from "../model/CustomInterfaces";
-import {BodyParamsError} from "../model/CustomTypes";
+import {BodyParamsError} from "../model/CustomErrors";
 
 export default {
     renameFile: function (model: AddArtistImageModel): string {

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const AddImageHelper_1 = require("./AddImageHelper");
 const GithubHelper_1 = require("./GithubHelper");
-class ShowcaseController {
+class showcaseFacade {
     /**
      * Adds a valid artist image.
      * @returns {Promise<void>}
@@ -62,4 +62,4 @@ class ShowcaseController {
     }
 }
 exports.ShowcaseController = ShowcaseController;
-//# sourceMappingURL=ShowcaseController.js.map
+//# sourceMappingURL=ShowcaseFacade.js.map

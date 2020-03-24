@@ -1,9 +1,9 @@
-import AddHelper from "./AddImageHelper";
+import AddHelper from "../helper/AddImageHelper";
 import * as Express from "express";
-import GitHubHelper from "./GithubHelper";
+import GitHubHelper from "../helper/GithubHelper";
 import {AddArtistImageModel} from "../model/CustomInterfaces";
 
-export class ShowcaseController {
+export class ShowcaseFacade {
     /**
      * Adds a valid artist image.
      * @returns {Promise<void>}
