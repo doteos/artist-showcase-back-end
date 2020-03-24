@@ -81,3 +81,9 @@ modules.xml
 *.ipr
 
 # End of https://www.gitignore.io/api/webstorm+iml
+
+node_modules
+build
+npm-debug.log
+.env
+.DS_Store
