@@ -1,9 +1,9 @@
 import * as fs from "fs";
-import {AddArtistImageModel} from "../model/CustomInterfaces";
+import {IAddArtistImageModel} from "../model/CustomInterfaces";
 import {BodyParamsError} from "../model/CustomErrors";
 
-export default {
-    renameFile: function (model: AddArtistImageModel): string {
+export class AddImageHelper {
+    public static renameFile(model: IAddArtistImageModel): string {
         const fileName = `${model.imageName.replace(/ /g, '_')}_by_${model.artistName.replace(/ /g, '_')}`;
         try {
             fs.renameSync(`uploads/${model.image.filename}`, `uploads/${fileName}`);
@@ -12,14 +12,14 @@ export default {
             throw new BodyParamsError(`${e.toString()} with image file`);
         }
         return fileName;
-    },
+    }
 
-    removeImageUpload: function (filename: String): boolean | String {
+    public static removeImageUpload(filename: String): boolean | String {
         try {
             fs.unlinkSync(`uploads/${filename}`);
         } catch (e) {
             return `${e.toString()} when removing ${filename}`;
         }
         return true;
-    },
-};
+    }
+}

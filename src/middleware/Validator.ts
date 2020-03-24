@@ -1,8 +1,8 @@
-import AddImageHelper from "../helper/AddImageHelper";
 import * as Express from "express";
 import * as Joi from "joi";
 import {ObjectSchema} from "joi";
 import * as fs from "fs";
+import {AddImageHelper} from "../helper/AddImageHelper";
 
 export default {
     validateJoi: function (schema: ObjectSchema, property: string) {

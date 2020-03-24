@@ -4,7 +4,7 @@ export interface IControllerBase {
     initRoutes(facade: ShowcaseFacade): any
 }
 
-export interface AddArtistImageModel {
+export interface IAddArtistImageModel {
     artistName: string
     imageName: string
     clickUrl: string

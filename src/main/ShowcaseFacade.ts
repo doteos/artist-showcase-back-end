@@ -1,7 +1,8 @@
-import AddHelper from "../helper/AddImageHelper";
 import * as Express from "express";
-import GitHubHelper from "../helper/GithubHelper";
-import {AddArtistImageModel} from "../model/CustomInterfaces";
+
+import {IAddArtistImageModel} from "../model/CustomInterfaces";
+import {AddImageHelper} from "../helper/AddImageHelper";
+import {GitHubHelper} from "../helper/GitHubHelper";
 
 export class ShowcaseFacade {
     /**
@@ -14,9 +15,9 @@ export class ShowcaseFacade {
         // TODO: If PR merged, make db entry
         let fileName = req.file.filename;
         try {
-            const model: AddArtistImageModel = req.body;
+            const model: IAddArtistImageModel = req.body;
             model.image = req.file;
-            fileName = AddHelper.renameFile(model);
+            fileName = AddImageHelper.renameFile(model);
             await GitHubHelper.addArtistImageBranch(model);
             res.status(200);
             res.send(model);
@@ -24,7 +25,7 @@ export class ShowcaseFacade {
             res.status(400);
             res.send(e.message);
         }
-        AddHelper.removeImageUpload(fileName);
+        AddImageHelper.removeImageUpload(fileName);
         next();
     }
 
