@@ -3,7 +3,7 @@ import {ShowcaseFacade} from "../main/ShowcaseFacade";
 import {IControllerBase} from "../model/CustomInterfaces";
 
 export class SpecificImageController implements IControllerBase {
-    public path = '/showcase/:uid';
+    public static path = '/showcase/:uid';
     public router = express.Router();
 
     constructor(facade: ShowcaseFacade) {
@@ -11,6 +11,6 @@ export class SpecificImageController implements IControllerBase {
     }
 
     public initRoutes(facade: ShowcaseFacade) {
-        this.router.delete(this.path, facade.deleteImage);
+        this.router.delete(SpecificImageController.path, facade.deleteImage);
     }
 }

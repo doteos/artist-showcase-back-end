@@ -1,12 +1,15 @@
-import * as Express from 'express'
+import * as express from 'express'
 import {Application} from 'express'
+import {ShowcaseFacade} from "./main/ShowcaseFacade";
+import * as http from "http";
 
 export class App {
-    public app: Application;
-    public port: number;
+    private readonly app: Application;
+    private readonly port: number;
+    private facade = new ShowcaseFacade();
 
-    constructor(appInit: { port: number, middleWares: any, controllers: any }) {
-        this.app = Express();
+    constructor(appInit: { port: number, middleWares: any, controllers: any[] }) {
+        this.app = express();
         this.port = appInit.port;
 
         this.middleWares(appInit.middleWares);
@@ -23,22 +26,31 @@ export class App {
 
     private routes(controllers: { forEach: (arg0: (controller: any) => void) => void; }) {
         controllers.forEach(controller => {
-            this.app.use('/', controller.router);
+            const inst = new controller(this.facade);
+            this.app.use('/', inst.router);
         });
     }
 
     private assets() {
-        this.app.use(Express.static('public'));
-        this.app.use(Express.static('views'));
+        this.app.use(express.static('public'));
+        this.app.use(express.static('views'));
     }
 
     private template() {
         this.app.set('view engine', 'pug');
     }
 
-    public listen() {
-        this.app.listen(this.port, () => {
+    public listen(): http.Server {
+        return this.app.listen(this.port, () => {
             console.log(`App listening on the http://localhost:${this.port}`);
         });
+    }
+
+    public getApp(): Application {
+        return this.app;
+    }
+
+    public isSetup(): boolean {
+        return this.facade.isSetup;
     }
 }

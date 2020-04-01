@@ -6,7 +6,7 @@ import * as Joi from "joi";
 import Validator from "../middleware/Validator";
 
 export class ArtistImageController implements IControllerBase {
-    public path = '/showcase/artist/image';
+    public static path = '/showcase/artist/image';
     public router = express.Router();
     private schemaQuery = Joi.object().keys({
         artistName: Joi.string().min(1).max(18).required(),
@@ -21,8 +21,10 @@ export class ArtistImageController implements IControllerBase {
 
     public initRoutes(facade: ShowcaseFacade) {
         const upload = multer({dest: 'uploads/'});
-        this.router.get(this.path, facade.getArtistImage);
-        this.router.post(this.path, [Validator.validateJoi(this.schemaQuery, 'body'),
-            upload.single('image'), Validator.validateImageFile()], facade.addArtistImage);
+        this.router.get(ArtistImageController.path, (req, res, next) =>
+            facade.getArtistImage(req, res, next));
+        this.router.post(ArtistImageController.path, [Validator.validateJoi(this.schemaQuery, 'body'),
+                upload.single('image'), Validator.validateImageFile()],
+            (req, res, next) => facade.addArtistImage(req, res, next));
     }
 }

@@ -88,5 +88,5 @@ npm-debug.log
 .env
 .DS_Store
 
-uploads/*
-repo/*
+uploads/
+repo/
