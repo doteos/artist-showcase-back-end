@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import {IAddArtistImageModel} from "../model/CustomInterfaces";
-import {BodyParamsError} from "../model/CustomErrors";
+import {IAddArtistImageModel} from "../custom/CustomInterfaces";
+import {BodyParamsError} from "../custom/CustomErrors";
 
 export class AddImageHelper {
     public static renameFile(model: IAddArtistImageModel): string {

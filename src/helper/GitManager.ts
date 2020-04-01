@@ -1,7 +1,7 @@
-import {IAddArtistImageModel} from "../model/CustomInterfaces";
+import {IAddArtistImageModel} from "../custom/CustomInterfaces";
 import * as SimpleGit from "simple-git/promise";
 import * as fs from "fs";
-import {ImageExistsInDatabaseError, PushToGitHubError} from "../model/CustomErrors";
+import {ImageExistsInDatabaseError, PushToGitHubError} from "../custom/CustomErrors";
 import {DataManager} from "./DataManager";
 
 export class GitManager {

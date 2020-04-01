@@ -29,15 +29,15 @@ exports.default = {
             // try {
             //     await sGit.checkoutLocalBranch(GitHub.MASTER);
             //     await sGit.pull(GitHub.ORIGIN, GitHub.MASTER);
-            //     await sGit.checkoutBranch(model.image.filename, GitHub.MASTER);
-            //     const artistPath = `repo/${model.artistName.toLowerCase().replace(/ /g, '_')}`;
+            //     await sGit.checkoutBranch(custom.image.filename, GitHub.MASTER);
+            //     const artistPath = `repo/${custom.artistName.toLowerCase().replace(/ /g, '_')}`;
             //     if (!fs.existsSync(artistPath)) {
             //         fs.mkdirSync(artistPath);
             //     }
-            //     fs.renameSync(`uploads/${model.image.filename}`, `${artistPath}/${model.image.filename}`);
-            //     await sGit.add(model.image.filename);
-            //     await sGit.commit(`Add ${model.imageName} by ${model.artistName}`);
-            //     await sGit.push(GitHub.ORIGIN, model.image.filename);
+            //     fs.renameSync(`uploads/${custom.image.filename}`, `${artistPath}/${custom.image.filename}`);
+            //     await sGit.add(custom.image.filename);
+            //     await sGit.commit(`Add ${custom.imageName} by ${custom.artistName}`);
+            //     await sGit.push(GitHub.ORIGIN, custom.image.filename);
             //     await sGit.checkoutLocalBranch(GitHub.MASTER);
             //     await sGit.pull(GitHub.ORIGIN, GitHub.MASTER);
             // } catch (e) {

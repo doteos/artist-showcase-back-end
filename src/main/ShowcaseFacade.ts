@@ -1,6 +1,6 @@
 import * as Express from "express";
 
-import {IAddArtistImageModel} from "../model/CustomInterfaces";
+import {IAddArtistImageModel} from "../custom/CustomInterfaces";
 import {AddImageHelper} from "../helper/AddImageHelper";
 import {GitManager} from "../helper/GitManager";
 import {DataManager} from "../helper/DataManager";

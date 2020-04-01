@@ -1,7 +1,7 @@
-import {IAddArtistImageModel, IDatabase, IDatabaseArtist, IDatabaseArtistImage} from "../model/CustomInterfaces";
+import {IAddArtistImageModel, IDatabase, IDatabaseArtist, IDatabaseArtistImage} from "../custom/CustomInterfaces";
 import * as fs from "fs";
 import {GitManager} from "./GitManager";
-import {ImageExistsInDatabaseError} from "../model/CustomErrors";
+import {ImageExistsInDatabaseError} from "../custom/CustomErrors";
 
 export class DataManager {
     private database: IDatabase;

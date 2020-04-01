@@ -45,12 +45,4 @@ export class App {
             console.log(`App listening on the http://localhost:${this.port}`);
         });
     }
-
-    public getApp(): Application {
-        return this.app;
-    }
-
-    public isSetup(): boolean {
-        return this.facade.isSetup;
-    }
 }

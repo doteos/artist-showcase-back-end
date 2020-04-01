@@ -1,6 +1,6 @@
 import * as express from 'express'
 import {ShowcaseFacade} from "../main/ShowcaseFacade";
-import {IControllerBase} from "../model/CustomInterfaces";
+import {IControllerBase} from "../custom/CustomInterfaces";
 
 export class SpecificImageController implements IControllerBase {
     public static path = '/showcase/:uid';

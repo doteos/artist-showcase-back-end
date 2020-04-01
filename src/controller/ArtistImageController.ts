@@ -1,7 +1,7 @@
 import * as express from 'express'
 import {ShowcaseFacade} from "../main/ShowcaseFacade";
 import * as multer from "multer";
-import {IControllerBase} from "../model/CustomInterfaces";
+import {IControllerBase} from "../custom/CustomInterfaces";
 import * as Joi from "joi";
 import Validator from "../middleware/Validator";
 
