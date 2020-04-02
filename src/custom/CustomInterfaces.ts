@@ -30,3 +30,10 @@ export interface IDatabaseArtistImage {
     name: string
     filename: string
 }
+
+export interface IArtistImageModel {
+    imageUrl: string
+    imageName: string
+    clickUrl: string
+    artistName: string
+}

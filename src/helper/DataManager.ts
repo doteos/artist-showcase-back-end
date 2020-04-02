@@ -1,7 +1,17 @@
-import {IAddArtistImageModel, IDatabase, IDatabaseArtist, IDatabaseArtistImage} from "../custom/CustomInterfaces";
+import {
+    IAddArtistImageModel,
+    IArtistImageModel,
+    IDatabase,
+    IDatabaseArtist,
+    IDatabaseArtistImage
+} from "../custom/CustomInterfaces";
 import * as fs from "fs";
-import {GitManager} from "./GitManager";
-import {ImageExistsInDatabaseError} from "../custom/CustomErrors";
+import {
+    ImageExistsInDatabaseError,
+    NoArtistsInDatabaseError,
+    NoImageByArtistInDatabaseError
+} from "../custom/CustomErrors";
+import {Constants} from "./Constants";
 
 export class DataManager {
     private database: IDatabase;
@@ -11,7 +21,7 @@ export class DataManager {
     }
 
     public loadDatabaseFromLocalRepo() {
-        const json = fs.readFileSync(`${GitManager.PATH}/db.json`, "utf8");
+        const json = fs.readFileSync(`${Constants.PATH}/db.json`, "utf8");
         this.database = JSON.parse(json);
     }
 
@@ -37,9 +47,26 @@ export class DataManager {
         };
         if (!artist.portfolio.includes(image)) {
             artist.portfolio.push(image);
-            fs.writeFileSync(`${GitManager.PATH}/db.json`, JSON.stringify(databaseCopy, null, 2));
+            fs.writeFileSync(`${Constants.PATH}/db.json`, JSON.stringify(databaseCopy, null, 2));
         } else {
             throw new ImageExistsInDatabaseError(`${model.imageName} by ${model.artistName} already exists.`);
         }
+    }
+
+    public getRandomImage(): IArtistImageModel {
+        if (this.database.data.length === 0) {
+            throw new NoArtistsInDatabaseError('There are no artists to get artwork from.');
+        }
+        const artist: IDatabaseArtist = this.database.data[Math.floor(Math.random() * this.database.data.length)];
+        if (artist.portfolio.length === 0) {
+            throw new NoImageByArtistInDatabaseError('There is no artwork by this artist.');
+        }
+        const artwork: IDatabaseArtistImage = artist.portfolio[Math.floor(Math.random() * artist.portfolio.length)];
+        return {
+            artistName: artist.name,
+            clickUrl: artist.link,
+            imageName: artwork.name,
+            imageUrl: `${Constants.DATABASE_URI}${artist.folder}/${artwork.filename}`
+        };
     }
 }

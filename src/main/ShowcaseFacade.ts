@@ -1,6 +1,6 @@
 import * as Express from "express";
 
-import {IAddArtistImageModel} from "../custom/CustomInterfaces";
+import {IAddArtistImageModel, IArtistImageModel} from "../custom/CustomInterfaces";
 import {AddImageHelper} from "../helper/AddImageHelper";
 import {GitManager} from "../helper/GitManager";
 import {DataManager} from "../helper/DataManager";
@@ -12,10 +12,6 @@ export class ShowcaseFacade {
 
     constructor() {
         this.setupDatabase().then(() => this._isSetup = true);
-    }
-
-    get isSetup(): boolean {
-        return this._isSetup;
     }
 
     private async setupDatabase() {
@@ -54,13 +50,18 @@ export class ShowcaseFacade {
      * @returns {Promise<void>}
      */
     public async getArtistImage(req: Express.Request, res: Express.Response, next: Function) {
-        // TODO: Returns a random entry from dataManager
-        // TODO: Return format is JSONObject with imageUrl, imageName, clickUrl, artistName
         if (!this._isSetup) {
             res.status(503);
             res.send('Server is not ready yet, give it a moment.');
         }
-        res.send('Received a GET HTTP method for getImage');
+        try {
+            const model: IArtistImageModel = this.dataManager.getRandomImage();
+            res.status(200);
+            res.send(model);
+        } catch (e) {
+            res.status(400);
+            res.send(e.message);
+        }
         next();
     }
 

@@ -21,10 +21,12 @@ export class ArtistImageController implements IControllerBase {
 
     public initRoutes(facade: ShowcaseFacade) {
         const upload = multer({dest: 'uploads/'});
-        this.router.get(ArtistImageController.path, (req, res, next) =>
-            facade.getArtistImage(req, res, next));
+        this.router.get(ArtistImageController.path,
+            (req, res, next) =>
+                facade.getArtistImage(req, res, next));
         this.router.post(ArtistImageController.path, [Validator.validateJoi(this.schemaQuery, 'body'),
                 upload.single('image'), Validator.validateImageFile()],
-            (req, res, next) => facade.addArtistImage(req, res, next));
+            (req, res, next) =>
+                facade.addArtistImage(req, res, next));
     }
 }
