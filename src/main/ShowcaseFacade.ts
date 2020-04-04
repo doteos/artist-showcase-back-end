@@ -60,7 +60,7 @@ export class ShowcaseFacade {
             res.send(model);
         } catch (e) {
             res.status(400);
-            res.send(e.message);
+            res.send({error: e.toString()});
         }
         next();
     }
