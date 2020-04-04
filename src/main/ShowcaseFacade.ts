@@ -26,7 +26,7 @@ export class ShowcaseFacade {
     public async addArtistImage(req: Express.Request, res: Express.Response, next: Function) {
         if (!this._isSetup) {
             res.status(503);
-            res.send('Server is not ready yet, give it a moment.');
+            res.send({error: 'Server is not ready yet, give it a moment.'});
         }
         let fileName = req.file.filename;
         try {
@@ -39,14 +39,14 @@ export class ShowcaseFacade {
             res.send(model);
         } catch (e) {
             res.status(400);
-            res.send(e.message);
+            res.send({error: e.toString()});
         }
         AddImageHelper.removeImageUpload(fileName);
         next();
     }
 
     /**
-     * Returns a random image;
+     * Returns a random image from the database.
      * @returns {Promise<void>}
      */
     public async getArtistImage(req: Express.Request, res: Express.Response, next: Function) {

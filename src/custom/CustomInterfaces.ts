@@ -37,3 +37,8 @@ export interface IArtistImageModel {
     clickUrl: string
     artistName: string
 }
+
+export interface IUser {
+    username: string
+    password: string
+}

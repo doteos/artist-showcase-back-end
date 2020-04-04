@@ -21,7 +21,7 @@ export class DataManager {
     }
 
     public loadDatabaseFromLocalRepo() {
-        const json = fs.readFileSync(`${Constants.PATH}/db.json`, "utf8");
+        const json = fs.readFileSync(`${Constants.REPO_PATH}/db.json`, "utf8");
         this.database = JSON.parse(json);
     }
 
@@ -45,9 +45,10 @@ export class DataManager {
             name: model.imageName,
             filename: `${model.image.filename}.${model.imageType}`
         };
-        if (!artist.portfolio.includes(image)) {
+        const containsImage: IDatabaseArtistImage[] = artist.portfolio.filter(i => i.filename === image.filename);
+        if (containsImage.length === 0) {
             artist.portfolio.push(image);
-            fs.writeFileSync(`${Constants.PATH}/db.json`, JSON.stringify(databaseCopy, null, 2));
+            fs.writeFileSync(`${Constants.REPO_PATH}/db.json`, JSON.stringify(databaseCopy, null, 2));
         } else {
             throw new ImageExistsInDatabaseError(`${model.imageName} by ${model.artistName} already exists.`);
         }
