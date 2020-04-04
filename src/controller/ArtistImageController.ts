@@ -9,7 +9,7 @@ import Authenticator from "../middleware/Authenticator";
 export class ArtistImageController implements IControllerBase {
     public static path = '/showcase/artist/image';
     public router = express.Router();
-    private schemaQuery = Joi.object().keys({
+    private postSchemaQuery = Joi.object().keys({
         artistName: Joi.string().min(1).max(18).required(),
         imageName: Joi.string().min(1).max(18).required(),
         clickUrl: Joi.string().uri().required(),
@@ -25,7 +25,7 @@ export class ArtistImageController implements IControllerBase {
         this.router.get(ArtistImageController.path,
             (req, res, next) =>
                 facade.getArtistImage(req, res, next));
-        this.router.post(ArtistImageController.path, [Authenticator.authenticate(), Validator.validateJoi(this.schemaQuery, 'body'),
+        this.router.post(ArtistImageController.path, [Authenticator.authenticate(), Validator.validateJoi(this.postSchemaQuery, 'body'),
                 upload.single('image'), Validator.validateImageFile()],
             (req, res, next) =>
                 facade.addArtistImage(req, res, next));
