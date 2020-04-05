@@ -1,6 +1,6 @@
 import * as Express from "express";
 
-import {IAddArtistImageModel, IArtistImageModel} from "../custom/CustomInterfaces";
+import {IAddArtistImageModel, IAddArtistModel, IArtistImageModel} from "../custom/CustomInterfaces";
 import {AddImageHelper} from "../helper/AddImageHelper";
 import {GitManager} from "../helper/GitManager";
 import {DataManager} from "../helper/DataManager";
@@ -42,6 +42,26 @@ export class ShowcaseFacade {
             res.send({error: e.toString()});
         }
         AddImageHelper.removeImageUpload(fileName);
+        next();
+    }
+
+    /**
+     * Creates an artist account.
+     * @returns {Promise<void>}
+     */
+    public async addArtistAccount(req: Express.Request, res: Express.Response, next: Function) {
+        if (!this._isSetup) {
+            res.status(503);
+            res.send({error: 'Server is not ready yet, give it a moment.'});
+        }
+        try {
+            const model: IAddArtistModel = req.body;
+            res.status(200);
+            res.send(model);
+        } catch (e) {
+            res.status(400);
+            res.send({error: e.toString()});
+        }
         next();
     }
 

@@ -4,7 +4,7 @@ import * as multer from "multer";
 import {IControllerBase} from "../custom/CustomInterfaces";
 import * as Joi from "joi";
 import Validator from "../middleware/Validator";
-import Authenticator from "../middleware/Authenticator";
+import {Authenticator} from "../middleware/Authenticator";
 
 export class ArtistImageController implements IControllerBase {
     public static path = '/showcase/artist/image';
