@@ -7,6 +7,22 @@ export interface IControllerBase {
     initRoutes(facade: ShowcaseFacade): any;
 }
 
+export interface IAddArtistModel {
+    email: string
+    artistName: string
+    actualName: string
+    clickUrl: string
+    password: string
+}
+
+export interface IUser {
+    email: string
+    artistName: string
+    actualName: string
+    clickUrl: string
+    hashed: string
+}
+
 export interface IAddArtistImageModel {
     artistName: string
     imageName: string
@@ -36,9 +52,4 @@ export interface IArtistImageModel {
     imageName: string
     clickUrl: string
     artistName: string
-}
-
-export interface IUser {
-    username: string
-    password: string
 }

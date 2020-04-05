@@ -4,7 +4,7 @@ import * as multer from "multer";
 import {IControllerBase} from "../custom/CustomInterfaces";
 import * as Joi from "joi";
 import Validator from "../middleware/Validator";
-import Authenticator from "../middleware/Authenticator";
+import {Authenticator} from "../middleware/Authenticator";
 
 export class ArtistImageController implements IControllerBase {
     public static path = '/showcase/artist/image';
@@ -25,7 +25,7 @@ export class ArtistImageController implements IControllerBase {
         this.router.get(ArtistImageController.path,
             (req, res, next) =>
                 facade.getArtistImage(req, res, next));
-        this.router.post(ArtistImageController.path, [Authenticator.authenticate(), Validator.validateJoi(this.postSchemaQuery, 'body'),
+        this.router.post(ArtistImageController.path, [Authenticator.authenticateToken(), Validator.validateJoi(this.postSchemaQuery, 'body'),
                 upload.single('image'), Validator.validateImageFile()],
             (req, res, next) =>
                 facade.addArtistImage(req, res, next));

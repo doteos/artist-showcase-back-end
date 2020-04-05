@@ -15,8 +15,6 @@ export default {
             } else {
                 const {details} = error;
                 const message = details.map(i => i.message).join(',');
-
-                console.log('error', message);
                 return res.status(422).json({error: message});
             }
         };
@@ -36,7 +34,7 @@ export default {
                 next();
             } catch (e) {
                 AddImageHelper.removeImageUpload(req.file.filename);
-                return res.status(422).json({error: `${e.toString()} with image file`});
+                return res.status(422).json({error: `${e.toString()} with image file.`});
             }
         };
     }

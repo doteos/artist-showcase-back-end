@@ -11,7 +11,6 @@ export class App {
     constructor(appInit: { port: number, middleWares: any, controllers: any[] }) {
         this.app = express();
         this.port = appInit.port;
-
         this.middleWares(appInit.middleWares);
         this.routes(appInit.controllers);
         this.assets();
