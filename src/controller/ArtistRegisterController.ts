@@ -5,10 +5,11 @@ import * as Joi from "joi";
 import Validator from "../middleware/Validator";
 import {Authenticator} from "../middleware/Authenticator";
 
-export class ArtistController implements IControllerBase {
-    public static path = '/showcase/artist';
+export class ArtistRegisterController implements IControllerBase {
+    public static path = '/showcase/artist/register';
     public router = express.Router();
     private postSchemaQuery = Joi.object().keys({
+        email: Joi.string().email().required(),
         artistName: Joi.string().min(1).max(18).required(),
         actualName: Joi.string().min(1).max(18).required(),
         clickUrl: Joi.string().uri().required(),
@@ -19,9 +20,11 @@ export class ArtistController implements IControllerBase {
     }
 
     public initRoutes(facade: ShowcaseFacade) {
-        this.router.post(ArtistController.path, [
-                Validator.validateJoi(this.postSchemaQuery, 'body'),
-                Authenticator.validate()],
+        this.router.use(ArtistRegisterController.path, express.urlencoded({extended: true}));
+        this.router.use(ArtistRegisterController.path, express.json());
+        this.router.post(ArtistRegisterController.path, [
+                Authenticator.validate(),
+                Validator.validateJoi(this.postSchemaQuery, 'body')],
             (req, res, next) =>
                 facade.addArtistAccount(req, res, next));
     }

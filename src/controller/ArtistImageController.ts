@@ -25,7 +25,7 @@ export class ArtistImageController implements IControllerBase {
         this.router.get(ArtistImageController.path,
             (req, res, next) =>
                 facade.getArtistImage(req, res, next));
-        this.router.post(ArtistImageController.path, [Authenticator.authenticate(), Validator.validateJoi(this.postSchemaQuery, 'body'),
+        this.router.post(ArtistImageController.path, [Authenticator.authenticateToken(), Validator.validateJoi(this.postSchemaQuery, 'body'),
                 upload.single('image'), Validator.validateImageFile()],
             (req, res, next) =>
                 facade.addArtistImage(req, res, next));

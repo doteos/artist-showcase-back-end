@@ -8,11 +8,19 @@ export interface IControllerBase {
 }
 
 export interface IAddArtistModel {
-    username: string
-    password: string
+    email: string
     artistName: string
     actualName: string
     clickUrl: string
+    password: string
+}
+
+export interface IUser {
+    email: string
+    artistName: string
+    actualName: string
+    clickUrl: string
+    hashed: string
 }
 
 export interface IAddArtistImageModel {
@@ -44,9 +52,4 @@ export interface IArtistImageModel {
     imageName: string
     clickUrl: string
     artistName: string
-}
-
-export interface IUser {
-    email: string
-    password: string
 }
