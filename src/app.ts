@@ -11,14 +11,14 @@ export class App {
     private readonly facade: ShowcaseFacade;
 
     constructor(appInit: { port: number, middleWares: any, controllers: any[] }) {
+        this.sessionManager = new SessionManager();
+        this.facade = new ShowcaseFacade(this.sessionManager);
         this.app = express();
         this.port = appInit.port;
         this.middleWares(appInit.middleWares);
         this.routes(appInit.controllers);
         this.assets();
         this.template();
-        this.sessionManager = new SessionManager();
-        this.facade = new ShowcaseFacade(this.sessionManager);
     }
 
     private middleWares(middleWares: { forEach: (arg0: (middleWare: any) => void) => void; }) {

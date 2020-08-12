@@ -15,7 +15,7 @@ export class SessionManager {
     public authenticateToken() {
         return async (req: Express.Request, res: Express.Response, next: Function) => {
             this.clearExpiredTokens();
-            const token: String = req.headers.authorization;
+            const token: String = req.headers.authorization.split(' ')[1];
             if (!this.tokenAndTime.has(token)) {
                 return res.status(401).json({error: 'Token expired.'});
             }
@@ -26,9 +26,9 @@ export class SessionManager {
     }
 
     private clearExpiredTokens() {
-        const keys = Object.keys(this.tokenAndTime);
+        const keys = this.tokenAndTime.keys();
         const time = new Date().getTime();
-        for (const token in keys) {
+        for (const token of keys) {
             const prevTime = this.tokenAndTime.get(token);
             const differenceInMin = (time - prevTime) / 1000 / 60;
             if (differenceInMin > 30) {

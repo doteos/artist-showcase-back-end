@@ -4,7 +4,6 @@ import * as multer from "multer";
 import {IControllerBase} from "../custom/CustomInterfaces";
 import * as Joi from "joi";
 import Validator from "../middleware/Validator";
-import {Authenticator} from "../middleware/Authenticator";
 import {SessionManager} from "../helper/SessionManager";
 
 export class ArtistImageController implements IControllerBase {
@@ -24,7 +23,7 @@ export class ArtistImageController implements IControllerBase {
     public initRoutes(facade: ShowcaseFacade, sessionManager: SessionManager) {
         const upload = multer({dest: 'uploads/'});
         this.router.get(ArtistImageController.path,
-            [facade.checkIfReady()],
+            [facade.checkIfReady(), sessionManager.authenticateToken()],
             (req, res, next) =>
                 facade.getArtistImage(req, res, next));
         this.router.post(ArtistImageController.path,
