@@ -1,5 +1,4 @@
 import * as Crypto from "crypto";
-import * as Express from "express";
 
 export class SessionManager {
     private tokenAndTime: Map<String, number> = new Map<String, number>();
@@ -13,7 +12,7 @@ export class SessionManager {
     }
 
     public authenticateToken() {
-        return async (req: Express.Request, res: Express.Response, next: Function) => {
+        return (req, res, next) => {
             this.clearExpiredTokens();
             const token: String = req.headers.authorization.split(' ')[1];
             if (!this.tokenAndTime.has(token)) {

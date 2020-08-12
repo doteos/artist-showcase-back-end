@@ -13,7 +13,7 @@ export class Authenticator {
                 return res.status(401).json({error: e.toString()});
             }
             next();
-        };
+        }
     }
 
     public static authenticateEmailAndPassword() {
@@ -25,10 +25,10 @@ export class Authenticator {
                 return res.status(401).json({error: e.toString()});
             }
             next();
-        };
+        }
     }
 
-    public static parseEmailAndPassword(headers: IncomingHttpHeaders): { email: string, password: string } {
+    private static parseEmailAndPassword(headers: IncomingHttpHeaders): { email: string, password: string } {
         if (!headers.authorization || headers.authorization.indexOf('Basic ') === -1) {
             throw new MissingAuthHeaderError('Missing authentication header.');
         }

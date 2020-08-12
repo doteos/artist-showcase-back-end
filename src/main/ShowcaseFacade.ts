@@ -79,7 +79,7 @@ export class ShowcaseFacade {
      * Returns a session token for an authenticated user.
      * @returns {Promise<void>}
      */
-    public async getSessionToken(req: Express.Request, res: Express.Response, next: Function) {
+    public getSessionToken(req: Express.Request, res: Express.Response, next: Function) {
         const token: String = this.sessionManager.generateToken();
         res.status(200);
         res.send({token: token});

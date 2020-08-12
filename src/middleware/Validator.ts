@@ -1,5 +1,4 @@
 import * as Express from "express";
-import * as Joi from "joi";
 import {ObjectSchema} from "joi";
 import * as fs from "fs";
 import {AddImageHelper} from "../helper/AddImageHelper";
@@ -7,7 +6,7 @@ import {AddImageHelper} from "../helper/AddImageHelper";
 export default {
     validateJoi: function (schema: ObjectSchema, property: string) {
         return (req: Express.Request, res: Express.Response, next: Function) => {
-            const {error} = Joi.validate(req[property], schema);
+            const {error} = schema.validate(req[property]);
             const valid = error == null;
 
             if (valid) {
@@ -21,7 +20,7 @@ export default {
     },
 
     validateImageFile: function () {
-        return (req: Express.Request, res: Express.Response, next: Function) => {
+        return (req, res, next) => {
             try {
                 const imageStats = fs.statSync(`uploads/${req.file.filename}`);
                 if (imageStats.size > 3000000) {
@@ -36,6 +35,6 @@ export default {
                 AddImageHelper.removeImageUpload(req.file.filename);
                 return res.status(422).json({error: `${e.toString()} with image file.`});
             }
-        };
+        }
     }
 }
