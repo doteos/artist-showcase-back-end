@@ -1,10 +1,11 @@
 import {ShowcaseFacade} from "../main/ShowcaseFacade";
 import {Router} from "express";
+import {SessionManager} from "../helper/SessionManager";
 
 export interface IControllerBase {
     router: Router;
 
-    initRoutes(facade: ShowcaseFacade): any;
+    initRoutes(facade: ShowcaseFacade, sessionManager: SessionManager): any;
 }
 
 export interface IAddArtistModel {

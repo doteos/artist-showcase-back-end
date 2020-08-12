@@ -4,7 +4,8 @@ import * as multer from "multer";
 import {IControllerBase} from "../custom/CustomInterfaces";
 import * as Joi from "joi";
 import Validator from "../middleware/Validator";
-import {Authenticator} from "../middleware/Authenticator";
+import {SessionManager} from "../helper/SessionManager";
+import * as Express from "express";
 
 export class ArtistImageController implements IControllerBase {
     public static path = '/showcase/artist/image';
@@ -16,18 +17,21 @@ export class ArtistImageController implements IControllerBase {
         image: Joi.required()
     });
 
-    constructor(facade: ShowcaseFacade) {
-        this.initRoutes(facade);
+    constructor(facade: ShowcaseFacade, sessionManager: SessionManager) {
+        this.initRoutes(facade, sessionManager);
     }
 
-    public initRoutes(facade: ShowcaseFacade) {
+    public initRoutes(facade: ShowcaseFacade, sessionManager: SessionManager) {
         const upload = multer({dest: 'uploads/'});
         this.router.get(ArtistImageController.path,
-            (req, res, next) =>
+            [facade.checkIfReady(), sessionManager.authenticateToken()],
+            (req: Express.Request, res: Express.Response, next: Function) =>
                 facade.getArtistImage(req, res, next));
-        this.router.post(ArtistImageController.path, [Authenticator.authenticateToken(), Validator.validateJoi(this.postSchemaQuery, 'body'),
+        this.router.post(ArtistImageController.path,
+            [facade.checkIfReady(), sessionManager.authenticateToken(),
+                Validator.validateJoi(this.postSchemaQuery, 'body'),
                 upload.single('image'), Validator.validateImageFile()],
-            (req, res, next) =>
+            (req: Express.Request, res: Express.Response, next: Function) =>
                 facade.addArtistImage(req, res, next));
     }
 }
