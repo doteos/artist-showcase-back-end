@@ -14,6 +14,6 @@ export class SpecificImageController implements IControllerBase {
 
     public initRoutes(facade: ShowcaseFacade, sessionManager: SessionManager) {
         this.router.delete(SpecificImageController.path,
-            [sessionManager.authenticateToken, facade.checkIfReady()], facade.deleteImage);
+            [sessionManager.authenticateToken(), facade.checkIfReady()], facade.deleteImage);
     }
 }
