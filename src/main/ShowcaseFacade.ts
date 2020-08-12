@@ -18,7 +18,7 @@ export class ShowcaseFacade {
         this.sessionManager = sessionManager;
     }
 
-    public async setupDatabase() {
+    private async setupDatabase() {
         this.gitHubHelper = await GitManager.getGitHubHelper();
         this.dataManager = new DataManager();
     }
