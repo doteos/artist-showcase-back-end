@@ -23,6 +23,7 @@ export class ArtistRegisterController implements IControllerBase {
         this.router.use(ArtistRegisterController.path, express.urlencoded({extended: true}));
         this.router.use(ArtistRegisterController.path, express.json());
         this.router.post(ArtistRegisterController.path, [
+                facade.checkIfReady(),
                 Authenticator.validate(),
                 Validator.validateJoi(this.postSchemaQuery, 'body')],
             (req, res, next) =>

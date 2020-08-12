@@ -5,6 +5,7 @@ import {IControllerBase} from "../custom/CustomInterfaces";
 import * as Joi from "joi";
 import Validator from "../middleware/Validator";
 import {Authenticator} from "../middleware/Authenticator";
+import {SessionManager} from "../helper/SessionManager";
 
 export class ArtistImageController implements IControllerBase {
     public static path = '/showcase/artist/image';
@@ -16,16 +17,19 @@ export class ArtistImageController implements IControllerBase {
         image: Joi.required()
     });
 
-    constructor(facade: ShowcaseFacade) {
-        this.initRoutes(facade);
+    constructor(facade: ShowcaseFacade, sessionManager: SessionManager) {
+        this.initRoutes(facade, sessionManager);
     }
 
-    public initRoutes(facade: ShowcaseFacade) {
+    public initRoutes(facade: ShowcaseFacade, sessionManager: SessionManager) {
         const upload = multer({dest: 'uploads/'});
         this.router.get(ArtistImageController.path,
+            [facade.checkIfReady()],
             (req, res, next) =>
                 facade.getArtistImage(req, res, next));
-        this.router.post(ArtistImageController.path, [Authenticator.authenticateToken(), Validator.validateJoi(this.postSchemaQuery, 'body'),
+        this.router.post(ArtistImageController.path,
+            [facade.checkIfReady(), sessionManager.authenticateToken(),
+                Validator.validateJoi(this.postSchemaQuery, 'body'),
                 upload.single('image'), Validator.validateImageFile()],
             (req, res, next) =>
                 facade.addArtistImage(req, res, next));

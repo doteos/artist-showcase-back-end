@@ -1,23 +1,36 @@
 import * as Express from "express";
 
-import {IAddArtistImageModel, IUser, IArtistImageModel, IAddArtistModel} from "../custom/CustomInterfaces";
+import {IAddArtistImageModel, IArtistImageModel, IAddArtistModel} from "../custom/CustomInterfaces";
 import {AddImageHelper} from "../helper/AddImageHelper";
 import {GitManager} from "../helper/GitManager";
 import {DataManager} from "../helper/DataManager";
 import {AuthManager} from "../helper/AuthManager";
+import {SessionManager} from "../helper/SessionManager";
 
 export class ShowcaseFacade {
     private gitHubHelper: GitManager;
-    private _isSetup: boolean = false;
+    private isSetup: boolean = false;
     private dataManager: DataManager;
+    private sessionManager: SessionManager;
 
-    constructor() {
-        this.setupDatabase().then(() => this._isSetup = true);
+    constructor(sessionManager: SessionManager) {
+        this.setupDatabase().then(() => this.isSetup = true);
+        this.sessionManager = sessionManager;
     }
 
-    private async setupDatabase() {
+    public async setupDatabase() {
         this.gitHubHelper = await GitManager.getGitHubHelper();
         this.dataManager = new DataManager();
+    }
+
+    public checkIfReady() {
+        return (req: Express.Request, res: Express.Response, next: Function) => {
+            if (!this.isSetup) {
+                res.status(503);
+                res.send({error: 'Server is not ready yet, give it a moment.'});
+            }
+            next();
+        };
     }
 
     /**
@@ -25,10 +38,6 @@ export class ShowcaseFacade {
      * @returns {Promise<void>}
      */
     public async addArtistImage(req: Express.Request, res: Express.Response, next: Function) {
-        if (!this._isSetup) {
-            res.status(503);
-            res.send({error: 'Server is not ready yet, give it a moment.'});
-        }
         let filename = req.file.filename;
         try {
             const model: IAddArtistImageModel = req.body;
@@ -43,7 +52,7 @@ export class ShowcaseFacade {
             res.send({error: e.toString()});
         }
         AddImageHelper.removeImageUpload(filename);
-        await next();
+        next();
     }
 
     /**
@@ -51,10 +60,6 @@ export class ShowcaseFacade {
      * @returns {Promise<void>}
      */
     public async addArtistAccount(req: Express.Request, res: Express.Response, next: Function) {
-        if (!this._isSetup) {
-            res.status(503);
-            res.send({error: 'Server is not ready yet, give it a moment.'});
-        }
         try {
             const model: IAddArtistModel = req.body;
             const base64Credentials = req.headers.authorization.split(' ')[1];
@@ -67,7 +72,7 @@ export class ShowcaseFacade {
             res.status(400);
             res.send({error: e.toString()});
         }
-        await next();
+        next();
     }
 
     /**
@@ -75,13 +80,10 @@ export class ShowcaseFacade {
      * @returns {Promise<void>}
      */
     public async getSessionToken(req: Express.Request, res: Express.Response, next: Function) {
-        if (!this._isSetup) {
-            res.status(503);
-            res.send('Server is not ready yet, give it a moment.');
-        }
+        const token: String = this.sessionManager.generateToken();
         res.status(200);
-        res.send({token: 'Some token, eventually.'});
-        await next();
+        res.send({token: token});
+        next();
     }
 
     /**
@@ -89,10 +91,6 @@ export class ShowcaseFacade {
      * @returns {Promise<void>}
      */
     public async getArtistImage(req: Express.Request, res: Express.Response, next: Function) {
-        if (!this._isSetup) {
-            res.status(503);
-            res.send('Server is not ready yet, give it a moment.');
-        }
         try {
             const model: IArtistImageModel = this.dataManager.getRandomImage();
             res.status(200);
@@ -101,7 +99,7 @@ export class ShowcaseFacade {
             res.status(400);
             res.send({error: e.toString()});
         }
-        await next();
+        next();
     }
 
     /**
@@ -110,11 +108,7 @@ export class ShowcaseFacade {
      */
     public async deleteImage(req: Express.Request, res: Express.Response, next: Function) {
         // TODO: deletes a dataManager entry based on uidArtist and uidImage
-        if (!this._isSetup) {
-            res.status(503);
-            res.send('Server is not ready yet, give it a moment.');
-        }
         res.send('Received a DELETE HTTP method for deleteImage');
-        await next();
+        next();
     }
 }

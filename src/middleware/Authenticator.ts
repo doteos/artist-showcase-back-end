@@ -7,7 +7,7 @@ export class Authenticator {
     public static validate() {
         return (req: Express.Request, res: Express.Response, next: Function) => {
             try {
-                const {email} = Authenticator.getEmailAndPassword(req.headers);
+                const {email} = Authenticator.parseEmailAndPassword(req.headers);
                 AuthManager.validateNewUser(email);
             } catch (e) {
                 return res.status(401).json({error: e.toString()});
@@ -16,31 +16,19 @@ export class Authenticator {
         };
     }
 
-    public static authenticateToken() {
-        return async (req: Express.Request, res: Express.Response, next: Function) => {
-            // try {
-            //     const {email, password} = Authenticator.getEmailAndPassword(req.headers);
-            //     await AuthManager.authenticateEmailAndPassword(email, password);
-            // } catch (e) {
-            //     return res.status(401).json({error: e.toString()});
-            // }
-            await next();
-        };
-    }
-
     public static authenticateEmailAndPassword() {
         return async (req: Express.Request, res: Express.Response, next: Function) => {
             try {
-                const {email, password} = Authenticator.getEmailAndPassword(req.headers);
+                const {email, password} = Authenticator.parseEmailAndPassword(req.headers);
                 await AuthManager.authenticateEmailAndPassword(email, password);
             } catch (e) {
                 return res.status(401).json({error: e.toString()});
             }
-            await next();
+            next();
         };
     }
 
-    private static getEmailAndPassword(headers: IncomingHttpHeaders): { email: string, password: string } {
+    public static parseEmailAndPassword(headers: IncomingHttpHeaders): { email: string, password: string } {
         if (!headers.authorization || headers.authorization.indexOf('Basic ') === -1) {
             throw new MissingAuthHeaderError('Missing authentication header.');
         }

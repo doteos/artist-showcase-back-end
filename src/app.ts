@@ -2,11 +2,13 @@ import * as express from 'express'
 import {Application} from 'express'
 import {ShowcaseFacade} from "./main/ShowcaseFacade";
 import * as http from "http";
+import {SessionManager} from "./helper/SessionManager";
 
 export class App {
     private readonly app: Application;
     private readonly port: number;
-    private facade = new ShowcaseFacade();
+    private readonly sessionManager: SessionManager;
+    private readonly facade: ShowcaseFacade;
 
     constructor(appInit: { port: number, middleWares: any, controllers: any[] }) {
         this.app = express();
@@ -15,6 +17,8 @@ export class App {
         this.routes(appInit.controllers);
         this.assets();
         this.template();
+        this.sessionManager = new SessionManager();
+        this.facade = new ShowcaseFacade(this.sessionManager);
     }
 
     private middleWares(middleWares: { forEach: (arg0: (middleWare: any) => void) => void; }) {
@@ -25,7 +29,7 @@ export class App {
 
     private routes(controllers: { forEach: (arg0: (controller: any) => void) => void; }) {
         controllers.forEach(controller => {
-            const inst = new controller(this.facade);
+            const inst = new controller(this.facade, this.sessionManager);
             this.app.use('/', inst.router);
         });
     }
