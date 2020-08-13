@@ -49,16 +49,18 @@ export class AuthenticationHelper {
     }
 
     /**
-     * Changes the secret key if it has not been recreated within 30 minutes.
+     * Changes the secret key if it is forced or has not been recreated within 30 minutes.
      * @returns true if changed, false if it didn't.
      */
-    public static generateSecret(): boolean {
-        const json = fs.readFileSync(Constants.CREATE_CRED, "utf8");
-        const pastTime = JSON.parse(json)["time"];
+    public static generateSecret(forceGenerate: boolean = false): boolean {
         const time = new Date().getTime();
-        const timeDifference = (time - pastTime) / 1000 / 60;
-        if (timeDifference < 30) {
-            return false;
+        if (!forceGenerate) {
+            const json = fs.readFileSync(Constants.CREATE_CRED, "utf8");
+            const pastTime = JSON.parse(json)["time"];
+            const timeDifference = (time - pastTime) / 1000 / 60;
+            if (timeDifference < 30) {
+                return false;
+            }
         }
         const secret = Crypto.randomBytes(16).toString('base64');
         const newSecret = {"freeBonnyB": secret, "time": time};
@@ -101,6 +103,7 @@ export class AuthenticationHelper {
             hashed: hash.toString()
         });
         fs.writeFileSync(Constants.USER_CRED, JSON.stringify(users, null, 2));
+        this.generateSecret(true);
     }
 
     private static loadUser(): IUser[] {
