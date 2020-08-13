@@ -1,5 +1,5 @@
 import * as Express from "express";
-import {AuthManager} from "../helper/AuthManager";
+import {AuthenticationHelper} from "../helper/AuthenticationHelper";
 import {IncomingHttpHeaders} from "http";
 import {MissingAuthBodyError, MissingAuthHeaderError} from "../custom/CustomErrors";
 
@@ -8,7 +8,7 @@ export class Authenticator {
         return (req: Express.Request, res: Express.Response, next: Function) => {
             try {
                 const {email} = Authenticator.parseEmailAndPasswordFromBody(req.body);
-                AuthManager.validateNewUser(email);
+                AuthenticationHelper.validateNewUser(email);
             } catch (e) {
                 return res.status(401).json({error: e.toString()});
             }
@@ -20,7 +20,7 @@ export class Authenticator {
         return async (req: Express.Request, res: Express.Response, next: Function) => {
             try {
                 const {email, password} = Authenticator.parseEmailAndPasswordFromHeaders(req.headers);
-                await AuthManager.authenticateEmailAndPassword(email, password);
+                await AuthenticationHelper.authenticateEmailAndPassword(email, password);
             } catch (e) {
                 return res.status(401).json({error: e.toString()});
             }

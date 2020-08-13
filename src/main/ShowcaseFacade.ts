@@ -4,7 +4,7 @@ import {IAddArtistImageModel, IArtistImageModel, IAddArtistModel} from "../custo
 import {AddImageHelper} from "../helper/AddImageHelper";
 import {GitManager} from "../helper/GitManager";
 import {DataManager} from "../helper/DataManager";
-import {AuthManager} from "../helper/AuthManager";
+import {AuthenticationHelper} from "../helper/AuthenticationHelper";
 import {SessionManager} from "../helper/SessionManager";
 
 export class ShowcaseFacade {
@@ -16,6 +16,7 @@ export class ShowcaseFacade {
     constructor(sessionManager: SessionManager) {
         this.setupDatabase().then(() => this.isSetup = true);
         this.sessionManager = sessionManager;
+        AuthenticationHelper.generateSecret();
     }
 
     private async setupDatabase() {
@@ -62,7 +63,7 @@ export class ShowcaseFacade {
     public async addArtistAccount(req: Express.Request, res: Express.Response, next: Function) {
         try {
             const model: IAddArtistModel = req.body;
-            await AuthManager.addNewUser(model);
+            await AuthenticationHelper.addNewUser(model);
             model.password = model.password.substring(0, 1).padEnd(model.password.length, "*");
             res.status(200);
             res.send(model);
@@ -107,6 +108,22 @@ export class ShowcaseFacade {
     public async deleteImage(req: Express.Request, res: Express.Response, next: Function) {
         // TODO: deletes a dataManager entry based on uidArtist and uidImage
         res.send('Received a DELETE HTTP method for deleteImage');
+        next();
+    }
+
+    /**
+     * Changes the secret key if it has not been recreated within 30 minutes.
+     * @returns {Promise<void>}
+     */
+    public async changeSecret(req: Express.Request, res: Express.Response, next: Function) {
+        const isChanged: boolean = AuthenticationHelper.generateSecret();
+        if (isChanged) {
+            res.status(200);
+            res.send('Successfully changed.');
+        } else {
+            res.status(204);
+            res.send('Did not change.');
+        }
         next();
     }
 }

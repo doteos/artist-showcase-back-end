@@ -9,8 +9,9 @@ import {
 } from "../custom/CustomErrors";
 import SecurePassword = require("secure-password");
 import * as Express from "express";
+import * as Crypto from "crypto";
 
-export class AuthManager {
+export class AuthenticationHelper {
     public static async authenticateEmailAndPassword(email: string, password: string) {
         const json = fs.readFileSync(Constants.USER_CRED, "utf8");
         const users: IUser[] = JSON.parse(json);
@@ -40,17 +41,39 @@ export class AuthManager {
     }
 
     public static validateNewUser(email: string) {
-        const users: IUser[] = AuthManager.loadUser();
+        const users: IUser[] = AuthenticationHelper.loadUser();
         const user = users.find(u => u.email === email);
         if (user) {
             throw new AccountWithEmailExistsError('An account with this email already exists.');
         }
     }
 
+    /**
+     * Changes the secret key if it has not been recreated within 30 minutes.
+     * @returns true if changed, false if it didn't.
+     */
+    public static generateSecret(): boolean {
+        const json = fs.readFileSync(Constants.CREATE_CRED, "utf8");
+        const pastTime = JSON.parse(json)["time"];
+        const time = new Date().getTime();
+        const timeDifference = (time - pastTime) / 1000 / 60;
+        if (timeDifference < 30) {
+            return false;
+        }
+        const secret = Crypto.randomBytes(16).toString('base64');
+        const newSecret = {"freeBonnyB": secret, "time": time};
+        try {
+            fs.writeFileSync(Constants.CREATE_CRED, JSON.stringify(newSecret, null, 2));
+        } catch (err) {
+            console.error('Could not save new secret.')
+        }
+        return true;
+    }
+
     public static checkSecret() {
         return (req: Express.Request, res: Express.Response, next: Function) => {
             const json = fs.readFileSync(Constants.CREATE_CRED, "utf8");
-            const secret: String = JSON.parse(json)["Free Bonny B"];
+            const secret: String = JSON.parse(json)["freeBonnyB"];
             const token: String = req.headers.authorization.split(' ')[1];
             if (secret != token) {
                 return res.status(401).json({error: 'You didn\'t free Bonny B.'});
@@ -61,7 +84,7 @@ export class AuthManager {
 
     public static async addNewUser(model: IAddArtistModel) {
         const pwd = new SecurePassword();
-        const users: IUser[] = AuthManager.loadUser();
+        const users: IUser[] = AuthenticationHelper.loadUser();
         const userPassword = Buffer.from(model.password);
         let hash = await pwd.hash(userPassword);
         const result = await pwd.verify(userPassword, hash);

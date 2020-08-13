@@ -5,7 +5,7 @@ import * as Joi from "joi";
 import Validator from "../middleware/Validator";
 import {Authenticator} from "../middleware/Authenticator";
 import * as Express from "express";
-import {AuthManager} from "../helper/AuthManager";
+import {AuthenticationHelper} from "../helper/AuthenticationHelper";
 
 export class ArtistRegisterController implements IControllerBase {
     public static path = '/showcase/artist/register';
@@ -27,10 +27,14 @@ export class ArtistRegisterController implements IControllerBase {
         this.router.use(ArtistRegisterController.path, express.json());
         this.router.post(ArtistRegisterController.path, [
                 facade.checkIfReady(),
-                AuthManager.checkSecret(),
+                AuthenticationHelper.checkSecret(),
                 Validator.validateJoi(this.postSchemaQuery, 'body'),
                 Authenticator.validateEmailAndPassword()],
             (req: Express.Request, res: Express.Response, next: Function) =>
                 facade.addArtistAccount(req, res, next));
+        this.router.put(ArtistRegisterController.path,
+            [facade.checkIfReady()],
+            (req: Express.Request, res: Express.Response, next: Function) =>
+                facade.changeSecret(req, res, next));
     }
 }
