@@ -8,6 +8,7 @@ import {
     UserCredentialDatabaseNotFoundError
 } from "../custom/CustomErrors";
 import SecurePassword = require("secure-password");
+import * as Express from "express";
 
 export class AuthManager {
     public static async authenticateEmailAndPassword(email: string, password: string) {
@@ -43,6 +44,18 @@ export class AuthManager {
         const user = users.find(u => u.email === email);
         if (user) {
             throw new AccountWithEmailExistsError('An account with this email already exists.');
+        }
+    }
+
+    public static checkSecret() {
+        return (req: Express.Request, res: Express.Response, next: Function) => {
+            const json = fs.readFileSync(Constants.CREATE_CRED, "utf8");
+            const secret: String = JSON.parse(json)["Free Bonny B"];
+            const token: String = req.headers.authorization.split(' ')[1];
+            if (secret != token) {
+                return res.status(401).json({error: 'You didn\'t free Bonny B.'});
+            }
+            next();
         }
     }
 

@@ -34,6 +34,12 @@ export class MissingAuthHeaderError extends Error {
     }
 }
 
+export class MissingAuthBodyError extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
 export class NoArtistAccountExistsError extends Error {
     constructor(message: string) {
         super(message);

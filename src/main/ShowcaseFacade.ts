@@ -62,10 +62,8 @@ export class ShowcaseFacade {
     public async addArtistAccount(req: Express.Request, res: Express.Response, next: Function) {
         try {
             const model: IAddArtistModel = req.body;
-            const base64Credentials = req.headers.authorization.split(' ')[1];
-            const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-            model.password = credentials.split(':')[1];
             await AuthManager.addNewUser(model);
+            model.password = model.password.substring(0, 1).padEnd(model.password.length, "*");
             res.status(200);
             res.send(model);
         } catch (e) {

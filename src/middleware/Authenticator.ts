@@ -1,13 +1,13 @@
 import * as Express from "express";
 import {AuthManager} from "../helper/AuthManager";
 import {IncomingHttpHeaders} from "http";
-import {MissingAuthHeaderError} from "../custom/CustomErrors";
+import {MissingAuthBodyError, MissingAuthHeaderError} from "../custom/CustomErrors";
 
 export class Authenticator {
-    public static validate() {
+    public static validateEmailAndPassword() {
         return (req: Express.Request, res: Express.Response, next: Function) => {
             try {
-                const {email} = Authenticator.parseEmailAndPassword(req.headers);
+                const {email} = Authenticator.parseEmailAndPasswordFromBody(req.body);
                 AuthManager.validateNewUser(email);
             } catch (e) {
                 return res.status(401).json({error: e.toString()});
@@ -19,7 +19,7 @@ export class Authenticator {
     public static authenticateEmailAndPassword() {
         return async (req: Express.Request, res: Express.Response, next: Function) => {
             try {
-                const {email, password} = Authenticator.parseEmailAndPassword(req.headers);
+                const {email, password} = Authenticator.parseEmailAndPasswordFromHeaders(req.headers);
                 await AuthManager.authenticateEmailAndPassword(email, password);
             } catch (e) {
                 return res.status(401).json({error: e.toString()});
@@ -28,7 +28,14 @@ export class Authenticator {
         }
     }
 
-    private static parseEmailAndPassword(headers: IncomingHttpHeaders): { email: string, password: string } {
+    private static parseEmailAndPasswordFromBody(body: any): { email: string, password: string } {
+        if (!body || !body.email || !body.password) {
+            throw new MissingAuthBodyError('Missing email and password from body.');
+        }
+        return {email: body.email, password: body.password};
+    }
+
+    private static parseEmailAndPasswordFromHeaders(headers: IncomingHttpHeaders): { email: string, password: string } {
         if (!headers.authorization || headers.authorization.indexOf('Basic ') === -1) {
             throw new MissingAuthHeaderError('Missing authentication header.');
         }

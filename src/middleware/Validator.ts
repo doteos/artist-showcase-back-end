@@ -20,7 +20,7 @@ export default {
     },
 
     validateImageFile: function () {
-        return (req, res, next) => {
+        return (req: Express.Request, res: Express.Response, next: Function) => {
             try {
                 const imageStats = fs.statSync(`uploads/${req.file.filename}`);
                 if (imageStats.size > 3000000) {
